@@ -1,71 +1,103 @@
 // ثبت اولیه Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker: Registered'))
-            .catch(err => console.log(`Service Worker: Error: ${err}`));
+        navigator.serviceWorker.register('./sw.js');
     });
 }
 
-// مختصات مرکز حرم امام رضا (ع)
 const mapCenter = [36.288, 59.616];
-
-// سطح زوم اولیه: عدد کمتر = نمای بازتر از شهر
-// این همان خطی است که تغییر کرده است
 const initialZoom = 13;
 
-// راه‌اندازی نقشه
 const map = L.map('map').setView(mapCenter, initialZoom);
 
-// افزودن لایه نقشه از OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-// خواندن اطلاعات از فایل locations.json و افزودن نشانگرها
+// متغیرهایی برای ذخیره موقعیت کاربر و کنترل مسیریابی
+let userLatLng = null;
+let routingControl = null;
+
+// خواندن اطلاعات اماکن و افزودن نشانگرها
 fetch('locations.json')
     .then(response => response.json())
     .then(data => {
         data.forEach(location => {
-            let popupContent = `<b>${location.name}</b><p>${location.category}</p>`;
-            L.marker(location.coords)
-                .addTo(map)
-                .bindPopup(popupContent);
+            let marker = L.marker(location.coords).addTo(map);
+            
+            // ساخت پاپ‌آپ با دکمه مسیریابی
+            const popupContent = `
+                <b>${location.name}</b>
+                <p>${location.category}</p>
+                <button class="route-button" data-lat="${location.coords[0]}" data-lng="${location.coords[1]}">مسیریابی به اینجا</button>
+            `;
+            marker.bindPopup(popupContent);
         });
     });
 
-// نمایش موقعیت کاربر
-map.locate({
-    watch: true,
-    setView: false, // نقشه به صورت خودکار روی کاربر زوم نکند
-    enableHighAccuracy: true
-});
+// تابع برای شروع یا به‌روزرسانی مسیریابی
+function startRouting(start, end) {
+    if (routingControl) {
+        map.removeControl(routingControl);
+    }
 
-let userMarker, userCircle;
+    routingControl = L.Routing.control({
+        waypoints: [
+            L.latLng(start),
+            L.latLng(end)
+        ],
+        routeWhileDragging: false,
+        language: 'fa',
+        geocoder: null, // غیرفعال کردن جستجوی متنی
+        router: L.Routing.osrmv1({
+            serviceUrl: `https://router.project-osrm.org/route/v1`
+        }),
+        createMarker: function() { return null; }
+    }).addTo(map);
+}
+
+// ---- بخش مدیریت موقعیت کاربر ----
+let userMarker = null;
 
 function onLocationFound(e) {
-    const radius = e.accuracy;
-    const userLatLng = e.latlng;
+    userLatLng = e.latlng;
 
-    if (userMarker) {
-        userMarker.setLatLng(userLatLng);
-        userCircle.setLatLng(userLatLng).setRadius(radius);
+    if (!userMarker) {
+        let userIcon = L.divIcon({
+            className: 'user-location-marker',
+            iconSize: [20, 20]
+        });
+        userMarker = L.marker(userLatLng, { icon: userIcon }).addTo(map);
     } else {
-        userMarker = L.marker(userLatLng).addTo(map)
-            .bindPopup(`شما اینجا هستید`).openPopup();
-        userCircle = L.circle(userLatLng, radius, {
-            color: '#136AEC',
-            fillColor: '#136AEC',
-            fillOpacity: 0.15,
-            weight: 2
-        }).addTo(map);
+        userMarker.setLatLng(userLatLng);
     }
 }
 
 function onLocationError(e) {
-    alert("امکان دریافت موقعیت مکانی شما وجود ندارد.");
+    alert("امکان دریافت موقعیت مکانی شما وجود ندارد. لطفا GPS را فعال کنید.");
 }
 
-map.on('locationfound', onLocationFound);
-map.on('locationerror', onLocationError);
+// درخواست مداوم موقعیت کاربر
+map.locate({
+    watch: true,
+    setView: false,
+    enableHighAccuracy: true
+}).on('locationfound', onLocationFound).on('locationerror', onLocationError);
+
+// رویداد برای دکمه‌های مسیریابی داخل پاپ‌آپ‌ها
+map.on('popupopen', function(e) {
+    const btn = e.popup._container.querySelector('.route-button');
+    if (btn) {
+        btn.addEventListener('click', function() {
+            if (userLatLng) {
+                const lat = this.dataset.lat;
+                const lng = this.dataset.lng;
+                startRouting(userLatLng, [lat, lng]);
+                map.closePopup(); // بستن پاپ‌آپ بعد از کلیک
+            } else {
+                alert("ابتدا باید موقعیت مکانی شما پیدا شود. لطفا کمی صبر کنید.");
+            }
+        });
+    }
+});
