@@ -26,7 +26,6 @@ fetch('locations.json')
         data.forEach(location => {
             let marker = L.marker(location.coords).addTo(map);
             
-            // ساخت پاپ‌آپ با دکمه مسیریابی
             const popupContent = `
                 <b>${location.name}</b>
                 <p>${location.category}</p>
@@ -49,7 +48,7 @@ function startRouting(start, end) {
         ],
         routeWhileDragging: false,
         language: 'fa',
-        geocoder: null, // غیرفعال کردن جستجوی متنی
+        geocoder: null,
         router: L.Routing.osrmv1({
             serviceUrl: `https://router.project-osrm.org/route/v1`
         }),
@@ -85,6 +84,17 @@ map.locate({
     enableHighAccuracy: true
 }).on('locationfound', onLocationFound).on('locationerror', onLocationError);
 
+// ---- کد جدید برای دکمه موقعیت من ----
+const locateBtn = document.getElementById('locate-btn');
+locateBtn.addEventListener('click', () => {
+    if (userLatLng) {
+        // با یک انیمیشن نرم، به موقعیت کاربر برو
+        map.flyTo(userLatLng, 17); // عدد 17 سطح زوم است
+    } else {
+        alert("هنوز موقعیت شما پیدا نشده است. لطفا کمی صبر کنید.");
+    }
+});
+
 // رویداد برای دکمه‌های مسیریابی داخل پاپ‌آپ‌ها
 map.on('popupopen', function(e) {
     const btn = e.popup._container.querySelector('.route-button');
@@ -94,9 +104,9 @@ map.on('popupopen', function(e) {
                 const lat = this.dataset.lat;
                 const lng = this.dataset.lng;
                 startRouting(userLatLng, [lat, lng]);
-                map.closePopup(); // بستن پاپ‌آپ بعد از کلیک
+                map.closePopup();
             } else {
-                alert("ابتدا باید موقعیت مکانی شما پیدا شود. لطفا کمی صبر کنید.");
+                alert("ابتدا باید موقعیت مکانی شما پیدا شود.");
             }
         });
     }
