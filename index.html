@@ -146,35 +146,42 @@
 
   /* ---------------------- Data (places + graph) ----------------------- */
   const places = [
+    // مرکزیت
     {id:'shrine', name:'ضریح مطهر', type:'مکان', lat:36.2878, lon:59.6157, img:'https://picsum.photos/id/1011/800/500', desc:'محل قرارگیری ضریح امام رضا (ع)'},
-    {id:'sahn_enqelab', name:'صحن انقلاب اسلامی', type:'صحن', lat:36.2885, lon:59.6154, img:'https://picsum.photos/id/1013/800/500', desc:'شامل سقاخانه اسماعیل طلایی و پنجره فولاد'},
-    {id:'sahn_azadi', name:'صحن آزادی', type:'صحن', lat:36.2882, lon:59.6166, img:'https://picsum.photos/id/1014/800/500', desc:'صحن بزرگ شرقی حرم'},
-    {id:'sahn_jame_razavi', name:'صحن جامع رضوی', type:'صحن', lat:36.2865, lon:59.6155, img:'https://picsum.photos/id/1015/800/500', desc:'بزرگترین صحن حرم مطهر'},
-    {id:'sahn_goharshad', name:'مسجد گوهرشاد', type:'صحن', lat:36.2875, lon:59.6150, img:'https://picsum.photos/id/1012/800/500', desc:'مسجدی تاریخی و باشکوه در جنوب ضریح'},
-    {id:'sahn_jomhouri', name:'صحن جمهوری اسلامی', type:'صحن', lat:36.2878, lon:59.6143, img:'https://picsum.photos/id/1016/800/500', desc:'واقع در غرب حرم مطهر'},
-    {id:'sahn_qods', name:'صحن قدس', type:'صحن', lat:36.2869, lon:59.6148, img:'https://picsum.photos/id/1017/800/500', desc:'دارای سقاخانه‌ای با طرح بیت‌المقدس'},
-    {id:'sahn_kowsar', name:'صحن کوثر', type:'صحن', lat:36.2895, lon:59.6169, img:'https://picsum.photos/id/1018/800/500', desc:'در ضلع شمال شرقی حرم'},
-    {id:'sahn_ghadir', name:'صحن غدیر', type:'صحن', lat:36.2865, lon:59.6169, img:'https://picsum.photos/id/1019/800/500', desc:'واقع در ضلع جنوب غربی، جنب باب‌الجواد'},
-    {id:'sahn_imam_hasan', name:'صحن امام حسن مجتبی (ع)', type:'صحن', lat:36.2895, lon:59.6148, img:'https://picsum.photos/id/1020/800/500', desc:'در شمال حرم، ورودی بست شیخ طوسی'},
+    
+    // صحن‌ها
+    {id:'sahn_enqelab', name:'صحن انقلاب اسلامی', type:'صحن', lat:36.2885, lon:59.6154, img:'https://picsum.photos/id/1013/800/500', desc:'شمال ضریح، شامل سقاخانه و پنجره فولاد'},
+    {id:'sahn_azadi', name:'صحن آزادی', type:'صحن', lat:36.2882, lon:59.6166, img:'https://picsum.photos/id/1014/800/500', desc:'شرق ضریح مطهر'},
+    {id:'sahn_jame_razavi', name:'صحن جامع رضوی', type:'صحن', lat:36.2865, lon:59.6155, img:'https://picsum.photos/id/1015/800/500', desc:'جنوب ضریح، بزرگترین صحن حرم'},
+    {id:'sahn_goharshad', name:'مسجد گوهرشاد', type:'صحن', lat:36.2875, lon:59.6150, img:'https://picsum.photos/id/1012/800/500', desc:'جنوب ضریح، متصل به صحن جامع رضوی'},
+    {id:'sahn_jomhouri', name:'صحن جمهوری اسلامی', type:'صحن', lat:36.2878, lon:59.6143, img:'https://picsum.photos/id/1016/800/500', desc:'غرب ضریح مطهر'},
+    {id:'sahn_qods', name:'صحن قدس', type:'صحن', lat:36.2869, lon:59.6148, img:'https://picsum.photos/id/1017/800/500', desc:'جنوب غربی ضریح، جنب مسجد گوهرشاد'},
+    {id:'sahn_kowsar', name:'صحن کوثر', type:'صحن', lat:36.2892, lon:59.6171, img:'https://picsum.photos/id/1018/800/500', desc:'شمال شرقی حرم، ورودی بست نواب صفوی'},
+    {id:'sahn_ghadir', name:'صحن غدیر', type:'صحن', lat:36.2865, lon:59.6169, img:'https://picsum.photos/id/1019/800/500', desc:'جنوب شرقی حرم، ورودی باب الجواد'},
+    {id:'sahn_imam_hasan', name:'صحن امام حسن مجتبی (ع)', type:'صحن', lat:36.2895, lon:59.6148, img:'https://picsum.photos/id/1020/800/500', desc:'شمال حرم، ورودی بست شیخ طوسی'},
 
-    {id:'ravaq_darolzekr', name:'رواق دارالذکر', type:'رواق', lat:36.2877, lon:59.6163, img:'https://picsum.photos/id/1021/800/500', desc:'متصل به صحن آزادی'},
-    {id:'ravaq_darolhefaz', name:'رواق دارالحفاظ', type:'رواق', lat:36.2879, lon:59.6155, img:'https://picsum.photos/id/1022/800/500', desc:'از قدیمی‌ترین رواق‌ها'},
-    {id:'ravaq_darolsorur', name:'رواق دارالسرور', type:'رواق', lat:36.2876, lon:59.6155, img:'https://picsum.photos/id/1023/800/500', desc:'مخصوص برادران'},
-    {id:'ravaq_darolsiadeh', name:'رواق دارالسیاده', type:'رواق', lat:36.2881, lon:59.6152, img:'https://picsum.photos/id/1024/800/500', desc:'متصل به مسجد گوهرشاد'},
-    {id:'ravaq_imam_khomeini', name:'رواق امام خمینی', type:'رواق', lat:36.2875, lon:59.6162, img:'https://picsum.photos/id/1025/800/500', desc:'بزرگترین رواق حرم'},
-    {id:'ravaq_darolvelayeh', name:'رواق دارالولایه', type:'رواق', lat:36.2883, lon:59.6148, img:'https://picsum.photos/id/1026/800/500', desc:'در غرب ضریح مطهر'},
-    {id:'ravaq_sheikh_bahai', name:'مقبره شیخ بهایی', type:'مقبره', lat:36.2878, lon:59.6160, img:'https://picsum.photos/id/1027/800/500', desc:'آرامگاه عالم بزرگ، شیخ بهایی'},
-    {id:'ravaq_sheikh_toosi', name:'مقبره شیخ طوسی', type:'مقبره', lat:36.2888, lon:59.6146, img:'https://picsum.photos/id/1028/800/500', desc:'آرامگاه شیخ طوسی، جنب بست شیخ طوسی'},
+    // رواق‌های اصلی
+    {id:'ravaq_darolhefaz', name:'رواق دارالحفاظ', type:'رواق', lat:36.2876, lon:59.6156, img:'https://picsum.photos/id/1022/800/500', desc:'جنوب ضریح و از قدیمی‌ترین رواق‌ها'},
+    {id:'ravaq_darolsiadeh', name:'رواق دارالسیاده', type:'رواق', lat:36.2877, lon:59.6152, img:'https://picsum.photos/id/1024/800/500', desc:'جنوب غربی ضریح، متصل به مسجد گوهرشاد'},
+    {id:'ravaq_darolvelayeh', name:'رواق دارالولایه', type:'رواق', lat:36.2880, lon:59.6149, img:'https://picsum.photos/id/1026/800/500', desc:'غرب ضریح مطهر، متصل به صحن جمهوری'},
+    {id:'ravaq_imam_khomeini', name:'رواق امام خمینی', type:'رواق', lat:36.2875, lon:59.6162, img:'https://picsum.photos/id/1025/800/500', desc:'جنوب شرقی، بزرگترین رواق حرم'},
+    {id:'ravaq_darolzekr', name:'رواق دارالذکر', type:'رواق', lat:36.2879, lon:59.6161, img:'https://picsum.photos/id/1021/800/500', desc:'شرق ضریح، متصل به صحن آزادی'},
 
-    {id:'bab_reza', name:'باب الرضا', type:'باب', lat:36.2858, lon:59.6161, img:'https://picsum.photos/id/1030/800/500', desc:'ورودی از خیابان امام رضا (فلکه آب)'},
-    {id:'bab_javad', name:'باب الجواد', type:'باب', lat:36.2860, lon:59.6165, img:'https://picsum.photos/id/1031/800/500', desc:'ورودی از صحن جامع رضوی'},
+    // مقبره‌ها
+    {id:'maqbare_sheikh_bahai', name:'مقبره شیخ بهایی', type:'مقبره', lat:36.2878, lon:59.6160, img:'https://picsum.photos/id/1027/800/500', desc:'شرق ضریح، آرامگاه عالم بزرگ شیخ بهایی'},
+    {id:'maqbare_sheikh_toosi', name:'مقبره شیخ طوسی', type:'مقبره', lat:36.2888, lon:59.6146, img:'https://picsum.photos/id/1028/800/500', desc:'شمال غربی حرم، جنب بست شیخ طوسی'},
+    
+    // ورودی‌ها (باب‌ها)
+    {id:'bab_reza', name:'باب الرضا', type:'باب', lat:36.2858, lon:59.6161, img:'https://picsum.photos/id/1030/800/500', desc:'ورودی جنوبی از خیابان امام رضا (فلکه آب)'},
+    {id:'bab_javad', name:'باب الجواد', type:'باب', lat:36.2860, lon:59.6165, img:'https://picsum.photos/id/1031/800/500', desc:'ورودی جنوب شرقی به صحن جامع رضوی'},
     {id:'bab_shirazi', name:'بست شیخ طوسی (ورودی خیابان شیرازی)', type:'باب', lat:36.2891, lon:59.6140, img:'https://picsum.photos/id/1032/800/500', desc:'ورودی غربی حرم'},
     {id:'bab_tabarsi', name:'بست شیخ طبرسی (ورودی خیابان طبرسی)', type:'باب', lat:36.2898, lon:59.6150, img:'https://picsum.photos/id/1033/800/500', desc:'ورودی شمالی حرم'},
     {id:'bab_navvab', name:'بست شهید نواب صفوی (ورودی خیابان نواب)', type:'باب', lat:36.2888, lon:59.6175, img:'https://picsum.photos/id/1034/800/500', desc:'ورودی شرقی حرم'},
     
-    {id:'museum_quran', name:'موزه قرآن و نفایس', type:'مکان', lat:36.2892, lon:59.6167, img:'https://picsum.photos/id/1040/800/500', desc:'در صحن کوثر'},
-    {id:'central_library', name:'کتابخانه مرکزی', type:'مکان', lat:36.2878, lon:59.6172, img:'https://picsum.photos/id/1041/800/500', desc:'جنب بست شیخ حر عاملی'},
-    {id:'darolshafa', name:'دارالشفا امام رضا', type:'مکان', lat:36.2870, lon:59.6140, img:'https://picsum.photos/id/1042/800/500', desc:'مرکز درمانی شبانه‌روزی'},
+    // خدمات و مکان‌های مهم
+    {id:'museum_quran', name:'موزه قرآن و نفایس', type:'مکان', lat:36.2892, lon:59.6167, img:'https://picsum.photos/id/1040/800/500', desc:'واقع در صحن کوثر'},
+    {id:'central_library', name:'کتابخانه مرکزی', type:'مکان', lat:36.2878, lon:59.6172, img:'https://picsum.photos/id/1041/800/500', desc:'شرق صحن آزادی'},
+    {id:'darolshafa', name:'دارالشفا امام رضا', type:'مکان', lat:36.2870, lon:59.6140, img:'https://picsum.photos/id/1042/800/500', desc:'جنوب غربی حرم، مرکز درمانی شبانه‌روزی'},
     {id:'saqakhaneh', name:'سقاخانه اسماعیل طلایی', type:'مکان', lat:36.2884, lon:59.6157, img:'https://picsum.photos/id/1043/800/500', desc:'در مرکز صحن انقلاب اسلامی'},
     {id:'panjere_foolad', name:'پنجره فولاد', type:'مکان', lat:36.2882, lon:59.6155, img:'https://picsum.photos/id/1044/800/500', desc:'در صحن انقلاب، روبروی ضریح'},
     {id:'wc_ghadir', name:'سرویس بهداشتی غدیر', type:'مکان', lat:36.2863, lon:59.6172, img:'https://picsum.photos/id/1045/800/500', desc:'نزدیک باب الجواد'},
@@ -183,14 +190,14 @@
 
   // internal graph: list of bidirectional edges (ids)
   const edges = [
-    ['shrine','ravaq_darolhefaz'], ['shrine','ravaq_darolsiadeh'], ['shrine', 'ravaq_darolvelayeh'],
-    ['ravaq_darolhefaz','panjere_foolad'], ['ravaq_darolhefaz','ravaq_darolsorur'], ['ravaq_darolhefaz','ravaq_sheikh_bahai'],
+    ['shrine','ravaq_darolhefaz'], ['shrine','ravaq_darolsiadeh'], ['shrine', 'ravaq_darolvelayeh'], ['shrine', 'panjere_foolad'], ['shrine', 'maqbare_sheikh_bahai'],
+    ['ravaq_darolhefaz','sahn_goharshad'], ['ravaq_darolhefaz','maqbare_sheikh_bahai'],
     ['sahn_enqelab','saqakhaneh'], ['sahn_enqelab','panjere_foolad'], ['sahn_enqelab','bab_shirazi'], ['sahn_enqelab','bab_tabarsi'], ['sahn_enqelab','sahn_azadi'],
-    ['sahn_azadi','ravaq_darolzekr'], ['sahn_azadi','bab_navvab'], ['sahn_azadi','ravaq_imam_khomeini'],
+    ['sahn_azadi','ravaq_darolzekr'], ['sahn_azadi','bab_navvab'], ['sahn_azadi','ravaq_imam_khomeini'], ['sahn_azadi', 'maqbare_sheikh_bahai'],
     ['sahn_goharshad','ravaq_darolsiadeh'], ['sahn_goharshad','sahn_qods'], ['sahn_goharshad','ravaq_imam_khomeini'], ['sahn_goharshad', 'sahn_jame_razavi'],
     ['sahn_jame_razavi','bab_reza'], ['sahn_jame_razavi','bab_javad'], ['sahn_jame_razavi','sahn_ghadir'], ['sahn_jame_razavi', 'sahn_qods'],
     ['sahn_jomhouri','ravaq_darolvelayeh'], ['sahn_jomhouri','darolshafa'], ['sahn_jomhouri','bab_shirazi'],
-    ['sahn_imam_hasan', 'bab_tabarsi'], ['ravaq_sheikh_toosi','bab_tabarsi'],
+    ['sahn_imam_hasan', 'bab_tabarsi'], ['maqbare_sheikh_toosi','bab_tabarsi'],
     ['sahn_kowsar', 'museum_quran'], ['sahn_kowsar', 'bab_navvab'],
     ['central_library', 'bab_navvab'],
     ['sahn_ghadir', 'bab_javad'], ['sahn_ghadir', 'wc_ghadir'],
