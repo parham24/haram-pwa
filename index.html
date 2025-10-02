@@ -147,28 +147,28 @@
   /* ---------------------- Data (places + graph) ----------------------- */
   const places = [
     // مرکزیت
-    {id:'shrine', name:'ضریح مطهر', type:'مکان', lat:36.2878, lon:59.6157, img:'https://picsum.photos/id/1011/800/500', desc:'محل قرارگیری ضریح امام رضا (ع)'},
+    {id:'shrine', name:'ضریح مطهر', type:'مکان', lat:36.2879, lon:59.6157, img:'https://picsum.photos/id/1011/800/500', desc:'محل قرارگیری ضریح امام رضا (ع)'},
     
     // صحن‌ها
-    {id:'sahn_enqelab', name:'صحن انقلاب اسلامی', type:'صحن', lat:36.2885, lon:59.6154, img:'https://picsum.photos/id/1013/800/500', desc:'شمال ضریح، شامل سقاخانه و پنجره فولاد'},
-    {id:'sahn_azadi', name:'صحن آزادی', type:'صحن', lat:36.2882, lon:59.6166, img:'https://picsum.photos/id/1014/800/500', desc:'شرق ضریح مطهر'},
+    {id:'sahn_enqelab', name:'صحن انقلاب اسلامی', type:'صحن', lat:36.2885, lon:59.6156, img:'https://picsum.photos/id/1013/800/500', desc:'شمال ضریح، شامل سقاخانه و پنجره فولاد'},
+    {id:'sahn_azadi', name:'صحن آزادی', type:'صحن', lat:36.2883, lon:59.6166, img:'https://picsum.photos/id/1014/800/500', desc:'شرق ضریح مطهر'},
     {id:'sahn_jame_razavi', name:'صحن جامع رضوی', type:'صحن', lat:36.2865, lon:59.6155, img:'https://picsum.photos/id/1015/800/500', desc:'جنوب ضریح، بزرگترین صحن حرم'},
-    {id:'sahn_goharshad', name:'مسجد گوهرشاد', type:'صحن', lat:36.2875, lon:59.6150, img:'https://picsum.photos/id/1012/800/500', desc:'جنوب ضریح، متصل به صحن جامع رضوی'},
-    {id:'sahn_jomhouri', name:'صحن جمهوری اسلامی', type:'صحن', lat:36.2878, lon:59.6143, img:'https://picsum.photos/id/1016/800/500', desc:'غرب ضریح مطهر'},
+    {id:'sahn_goharshad', name:'مسجد گوهرشاد', type:'صحن', lat:36.2874, lon:59.6152, img:'https://picsum.photos/id/1012/800/500', desc:'جنوب ضریح، متصل به صحن جامع رضوی'},
+    {id:'sahn_jomhouri', name:'صحن جمهوری اسلامی', type:'صحن', lat:36.2881, lon:59.6145, img:'https://picsum.photos/id/1016/800/500', desc:'غرب ضریح مطهر'},
     {id:'sahn_qods', name:'صحن قدس', type:'صحن', lat:36.2869, lon:59.6148, img:'https://picsum.photos/id/1017/800/500', desc:'جنوب غربی ضریح، جنب مسجد گوهرشاد'},
     {id:'sahn_kowsar', name:'صحن کوثر', type:'صحن', lat:36.2892, lon:59.6171, img:'https://picsum.photos/id/1018/800/500', desc:'شمال شرقی حرم، ورودی بست نواب صفوی'},
     {id:'sahn_ghadir', name:'صحن غدیر', type:'صحن', lat:36.2865, lon:59.6169, img:'https://picsum.photos/id/1019/800/500', desc:'جنوب شرقی حرم، ورودی باب الجواد'},
     {id:'sahn_imam_hasan', name:'صحن امام حسن مجتبی (ع)', type:'صحن', lat:36.2895, lon:59.6148, img:'https://picsum.photos/id/1020/800/500', desc:'شمال حرم، ورودی بست شیخ طوسی'},
 
     // رواق‌های اصلی
-    {id:'ravaq_darolhefaz', name:'رواق دارالحفاظ', type:'رواق', lat:36.2876, lon:59.6156, img:'https://picsum.photos/id/1022/800/500', desc:'جنوب ضریح و از قدیمی‌ترین رواق‌ها'},
+    {id:'ravaq_darolhefaz', name:'رواق دارالحفاظ', type:'رواق', lat:36.2877, lon:59.6156, img:'https://picsum.photos/id/1022/800/500', desc:'جنوب ضریح و از قدیمی‌ترین رواق‌ها'},
     {id:'ravaq_darolsiadeh', name:'رواق دارالسیاده', type:'رواق', lat:36.2877, lon:59.6152, img:'https://picsum.photos/id/1024/800/500', desc:'جنوب غربی ضریح، متصل به مسجد گوهرشاد'},
     {id:'ravaq_darolvelayeh', name:'رواق دارالولایه', type:'رواق', lat:36.2880, lon:59.6149, img:'https://picsum.photos/id/1026/800/500', desc:'غرب ضریح مطهر، متصل به صحن جمهوری'},
-    {id:'ravaq_imam_khomeini', name:'رواق امام خمینی', type:'رواق', lat:36.2875, lon:59.6162, img:'https://picsum.photos/id/1025/800/500', desc:'جنوب شرقی، بزرگترین رواق حرم'},
-    {id:'ravaq_darolzekr', name:'رواق دارالذکر', type:'رواق', lat:36.2879, lon:59.6161, img:'https://picsum.photos/id/1021/800/500', desc:'شرق ضریح، متصل به صحن آزادی'},
+    {id:'ravaq_imam_khomeini', name:'رواق امام خمینی', type:'رواق', lat:36.2872, lon:59.6163, img:'https://picsum.photos/id/1025/800/500', desc:'جنوب شرقی، بزرگترین رواق حرم'},
+    {id:'ravaq_darolzekr', name:'رواق دارالذکر', type:'рواق', lat:36.2879, lon:59.6161, img:'https://picsum.photos/id/1021/800/500', desc:'شرق ضریح، متصل به صحن آزادی'},
 
     // مقبره‌ها
-    {id:'maqbare_sheikh_bahai', name:'مقبره شیخ بهایی', type:'مقبره', lat:36.2878, lon:59.6160, img:'https://picsum.photos/id/1027/800/500', desc:'شرق ضریح، آرامگاه عالم بزرگ شیخ بهایی'},
+    {id:'maqbare_sheikh_bahai', name:'مقبره شیخ بهایی', type:'مقبره', lat:36.2879, lon:59.6161, img:'https://picsum.photos/id/1027/800/500', desc:'شرق ضریح، آرامگاه عالم بزرگ شیخ بهایی'},
     {id:'maqbare_sheikh_toosi', name:'مقبره شیخ طوسی', type:'مقبره', lat:36.2888, lon:59.6146, img:'https://picsum.photos/id/1028/800/500', desc:'شمال غربی حرم، جنب بست شیخ طوسی'},
     
     // ورودی‌ها (باب‌ها)
@@ -179,29 +179,66 @@
     {id:'bab_navvab', name:'بست شهید نواب صفوی (ورودی خیابان نواب)', type:'باب', lat:36.2888, lon:59.6175, img:'https://picsum.photos/id/1034/800/500', desc:'ورودی شرقی حرم'},
     
     // خدمات و مکان‌های مهم
-    {id:'museum_quran', name:'موزه قرآن و نفایس', type:'مکان', lat:36.2892, lon:59.6167, img:'https://picsum.photos/id/1040/800/500', desc:'واقع در صحن کوثر'},
-    {id:'central_library', name:'کتابخانه مرکزی', type:'مکان', lat:36.2878, lon:59.6172, img:'https://picsum.photos/id/1041/800/500', desc:'شرق صحن آزادی'},
-    {id:'darolshafa', name:'دارالشفا امام رضا', type:'مکان', lat:36.2870, lon:59.6140, img:'https://picsum.photos/id/1042/800/500', desc:'جنوب غربی حرم، مرکز درمانی شبانه‌روزی'},
-    {id:'saqakhaneh', name:'سقاخانه اسماعیل طلایی', type:'مکان', lat:36.2884, lon:59.6157, img:'https://picsum.photos/id/1043/800/500', desc:'در مرکز صحن انقلاب اسلامی'},
     {id:'panjere_foolad', name:'پنجره فولاد', type:'مکان', lat:36.2882, lon:59.6155, img:'https://picsum.photos/id/1044/800/500', desc:'در صحن انقلاب، روبروی ضریح'},
-    {id:'wc_ghadir', name:'سرویس بهداشتی غدیر', type:'مکان', lat:36.2863, lon:59.6172, img:'https://picsum.photos/id/1045/800/500', desc:'نزدیک باب الجواد'},
-    {id:'wc_razavi', name:'سرویس بهداشتی جامع رضوی', type:'مکان', lat:36.2862, lon:59.6148, img:'https://picsum.photos/id/1046/800/500', desc:'زیر صحن جامع رضوی'}
+    {id:'saqakhaneh', name:'سقاخانه اسماعیل طلایی', type:'مکان', lat:36.2885, lon:59.6158, img:'https://picsum.photos/id/1043/800/500', desc:'در مرکز صحن انقلاب اسلامی'},
   ];
 
   // internal graph: list of bidirectional edges (ids)
+  // این گراف بازنویسی شده تا مسیرهای واقعی و منطقی را منعکس کند
   const edges = [
-    ['shrine','ravaq_darolhefaz'], ['shrine','ravaq_darolsiadeh'], ['shrine', 'ravaq_darolvelayeh'], ['shrine', 'panjere_foolad'], ['shrine', 'maqbare_sheikh_bahai'],
-    ['ravaq_darolhefaz','sahn_goharshad'], ['ravaq_darolhefaz','maqbare_sheikh_bahai'],
-    ['sahn_enqelab','saqakhaneh'], ['sahn_enqelab','panjere_foolad'], ['sahn_enqelab','bab_shirazi'], ['sahn_enqelab','bab_tabarsi'], ['sahn_enqelab','sahn_azadi'],
-    ['sahn_azadi','ravaq_darolzekr'], ['sahn_azadi','bab_navvab'], ['sahn_azadi','ravaq_imam_khomeini'], ['sahn_azadi', 'maqbare_sheikh_bahai'],
-    ['sahn_goharshad','ravaq_darolsiadeh'], ['sahn_goharshad','sahn_qods'], ['sahn_goharshad','ravaq_imam_khomeini'], ['sahn_goharshad', 'sahn_jame_razavi'],
-    ['sahn_jame_razavi','bab_reza'], ['sahn_jame_razavi','bab_javad'], ['sahn_jame_razavi','sahn_ghadir'], ['sahn_jame_razavi', 'sahn_qods'],
-    ['sahn_jomhouri','ravaq_darolvelayeh'], ['sahn_jomhouri','darolshafa'], ['sahn_jomhouri','bab_shirazi'],
-    ['sahn_imam_hasan', 'bab_tabarsi'], ['maqbare_sheikh_toosi','bab_tabarsi'],
-    ['sahn_kowsar', 'museum_quran'], ['sahn_kowsar', 'bab_navvab'],
-    ['central_library', 'bab_navvab'],
-    ['sahn_ghadir', 'bab_javad'], ['sahn_ghadir', 'wc_ghadir'],
-    ['sahn_qods', 'wc_razavi']
+    // اتصالات به ضریح (هسته مرکزی)
+    ['shrine', 'panjere_foolad'],      // شمال
+    ['shrine', 'maqbare_sheikh_bahai'],// شرق
+    ['shrine', 'ravaq_darolhefaz'],    // جنوب
+    ['shrine', 'ravaq_darolsiadeh'],   // جنوب غربی
+    ['shrine', 'ravaq_darolvelayeh'],  // غرب
+
+    // اتصالات صحن انقلاب (شمال)
+    ['sahn_enqelab', 'panjere_foolad'],
+    ['sahn_enqelab', 'saqakhaneh'],
+    ['sahn_enqelab', 'sahn_azadi'],
+    ['sahn_enqelab', 'sahn_jomhouri'],
+    ['sahn_enqelab', 'bab_tabarsi'],
+    ['sahn_enqelab', 'bab_shirazi'],
+
+    // اتصالات صحن آزادی (شرق)
+    ['sahn_azadi', 'sahn_enqelab'],
+    ['sahn_azadi', 'maqbare_sheikh_bahai'],
+    ['sahn_azadi', 'ravaq_imam_khomeini'],
+    ['sahn_azadi', 'bab_navvab'],
+
+    // اتصالات صحن جمهوری (غرب)
+    ['sahn_jomhouri', 'ravaq_darolvelayeh'],
+    ['sahn_jomhouri', 'sahn_enqelab'],
+    ['sahn_jomhouri', 'bab_shirazi'],
+
+    // اتصالات مسجد گوهرشاد (جنوب)
+    ['sahn_goharshad', 'ravaq_darolhefaz'],
+    ['sahn_goharshad', 'ravaq_darolsiadeh'],
+    ['sahn_goharshad', 'sahn_qods'],
+    ['sahn_goharshad', 'ravaq_imam_khomeini'],
+    ['sahn_goharshad', 'sahn_jame_razavi'],
+
+    // اتصالات رواق‌های پیرامونی به یکدیگر
+    ['ravaq_darolhefaz', 'ravaq_darolsiadeh'],
+    ['ravaq_darolhefaz', 'maqbare_sheikh_bahai'],
+    ['ravaq_darolsiadeh', 'ravaq_darolvelayeh'],
+    ['maqbare_sheikh_bahai', 'ravaq_darolzekr'],
+    ['ravaq_darolzekr', 'sahn_azadi'],
+
+    // اتصالات صحن جامع رضوی (جنوب دور)
+    ['sahn_jame_razavi', 'sahn_goharshad'],
+    ['sahn_jame_razavi', 'sahn_ghadir'],
+    ['sahn_jame_razavi', 'sahn_qods'],
+    ['sahn_jame_razavi', 'bab_reza'],
+    ['sahn_jame_razavi', 'bab_javad'],
+
+    // سایر اتصالات
+    ['sahn_qods', 'sahn_jomhouri'],
+    ['sahn_ghadir', 'bab_javad'],
+    ['sahn_kowsar', 'bab_navvab'],
+    ['sahn_imam_hasan', 'bab_tabarsi'],
+    ['maqbare_sheikh_toosi', 'bab_shirazi'],
   ];
 
   /* ---------------------- Utility functions ----------------------- */
@@ -277,7 +314,7 @@
     places.forEach(p => (groups[p.type] = groups[p.type] || []).push(p));
     Object.keys(groups).sort().forEach(type=>{
       const og = document.createElement('optgroup'); og.label = type;
-      groups[type].forEach(p=>{
+      groups[type].sort((a, b) => a.name.localeCompare(b.name)).forEach(p=>{
         const o = document.createElement('option'); o.value = p.id; o.textContent = p.name; og.appendChild(o);
       });
       startEl.appendChild(og);
@@ -285,7 +322,7 @@
 
     // end select: flat list
     endEl.innerHTML = '';
-    places.forEach(p=>{ const o = document.createElement('option'); o.value = p.id; o.textContent = `${p.name} — ${p.type}`; endEl.appendChild(o); });
+    places.sort((a, b) => a.name.localeCompare(b.name)).forEach(p=>{ const o = document.createElement('option'); o.value = p.id; o.textContent = `${p.name} — ${p.type}`; endEl.appendChild(o); });
 
     renderPlaces(new Set(['صحن','رواق','باب','مکان','مقبره']), '');
   }
@@ -294,6 +331,7 @@
     placesPanel.innerHTML = '';
     const query = (q||'').trim().toLowerCase();
     places.filter(p => filterTypes.has(p.type) && (query === '' || (p.name + ' ' + p.type + ' ' + p.desc).toLowerCase().includes(query)))
+      .sort((a, b) => a.name.localeCompare(b.name))
       .forEach(p=>{
         const card = document.createElement('div'); card.className='place-card';
         const img = document.createElement('img'); img.src = p.img;
@@ -394,14 +432,14 @@
   function dijkstra(startId, endId){
     const adj = buildAdj();
     const dist = {}, prev = {}, visited = {};
-    Object.keys(adj).forEach(k => { dist[k] = Infinity; prev[k] = null; visited[k] = false; });
+    Object.keys(placeById).forEach(k => { dist[k] = Infinity; prev[k] = null; visited[k] = false; });
     dist[startId] = 0;
     while(true){
       let u = null, ud = Infinity;
       for(const k in dist) if(!visited[k] && dist[k] < ud){ ud = dist[k]; u = k; }
-      if(u === null) break;
-      if(u === endId) break;
+      if(u === null || u === endId) break;
       visited[u] = true;
+      if (!adj[u]) continue;
       adj[u].forEach(edge => {
         const alt = dist[u] + edge.w;
         if(alt < dist[edge.to]){ dist[edge.to] = alt; prev[edge.to] = u; }
@@ -428,56 +466,47 @@
   function clearInternalRoute(){ if(internalPolyline) { map.removeLayer(internalPolyline); internalPolyline = null; } }
 
   // threshold to say "this point is inside/close to the internal network" (meters)
-  const INSIDE_THRESHOLD_METERS = 150; // Increased threshold for better coverage
+  const INSIDE_THRESHOLD_METERS = 150; 
 
   async function showRoute(startIdOrMe, endId){
     clearInternalRoute();
-    if(window.routingControl){ try{ map.removeControl(window.routingControl); } catch(e){} window.routingControl = null; }
     routeSummaryEl.textContent = 'در حال محاسبهٔ مسیر…'; routeStepsEl.innerHTML = '';
     try{
-      // resolve start coordinates
-      let startCoords;
+      let startCoords, startNodeId;
       if(startIdOrMe === '__me'){
-        const got = await locateUser(); startCoords = [got.lat, got.lon];
+        const got = await locateUser(); 
+        startCoords = [got.lat, got.lon];
+        startNodeId = nearestNode(startCoords[0], startCoords[1]).id;
       } else {
-        const s = placeById[startIdOrMe]; startCoords = [s.lat, s.lon];
+        const s = placeById[startIdOrMe]; 
+        startCoords = [s.lat, s.lon];
+        startNodeId = startIdOrMe;
       }
-      const e = placeById[endId]; const endCoords = [e.lat, e.lon];
+      const e = placeById[endId]; 
+      const endCoords = [e.lat, e.lon];
 
-      // check proximity to internal network
-      const startNearest = nearestNode(startCoords[0], startCoords[1]);
-      const endNearest   = nearestNode(endCoords[0], endCoords[1]);
-
-      // if both close enough, use internal graph Dijkstra
-      if(startNearest.dist <= INSIDE_THRESHOLD_METERS && endNearest.dist <= INSIDE_THRESHOLD_METERS){
-        const res = dijkstra(startNearest.id, endNearest.id);
-        if(res && res.path && res.path.length){
-          const latlngs = [];
-          if(startIdOrMe === '__me') latlngs.push(startCoords);
-          res.path.forEach(id => latlngs.push([placeById[id].lat, placeById[id].lon]));
-          if(latlngs[latlngs.length-1][0] !== endCoords[0] || latlngs[latlngs.length-1][1] !== endCoords[1]){
-            latlngs.push(endCoords);
-          }
-          internalPolyline = L.polyline(latlngs, {color:varOr('#0b6','#0b6'), weight:5, opacity:0.95}).addTo(map);
-          map.fitBounds(internalPolyline.getBounds(), {padding:[40,40]});
-          const total = latlngs.reduce((acc, cur, i, arr)=> i===0?0:acc + haversine(arr[i-1], cur), 0);
-          const mins = Math.round((total / 1.4) / 60);
-          routeSummaryEl.innerHTML = `<strong>مسیر داخلی:</strong> ${Math.round(total)} متر — زمان تقریبی: ${mins} دقیقه`;
-          let stepsHtml = res.path.map(id => placeById[id].name).join(' ← ');
-          routeStepsEl.innerHTML = `<div class="meta"><strong>مسیر:</strong> ${stepsHtml}</div>`;
-          return;
+      const res = dijkstra(startNodeId, endId);
+      if(res && res.path && res.path.length > 0){
+        const latlngs = res.path.map(id => [placeById[id].lat, placeById[id].lon]);
+        
+        if (startIdOrMe === '__me') {
+          latlngs.unshift(startCoords);
         }
-      }
 
-      // fallback: direct polyline
-      const line = L.polyline([startCoords, endCoords], {color:'#0b6', weight:4, dashArray:'8 6'}).addTo(map);
-      map.fitBounds(line.getBounds(), {padding:[40,40]});
-      const d = Math.round(haversine(startCoords, endCoords));
-      const mins = Math.round((d/1.4)/60);
-      routeSummaryEl.innerHTML = `<strong>مسیر مستقیم (تخمین):</strong> ${d} متر — ${mins} دقیقه`;
-      routeStepsEl.innerHTML = `<div class="meta">مسیریابی داخلی ممکن نیست. مسیر مستقیم نمایش داده شد.</div>`;
+        internalPolyline = L.polyline(latlngs, {color:varOr('#0b6','#0b6'), weight:5, opacity:0.95}).addTo(map);
+        map.fitBounds(internalPolyline.getBounds(), {padding:[40,40]});
+        
+        const total = latlngs.reduce((acc, cur, i, arr)=> i===0?0:acc + haversine(arr[i-1], cur), 0);
+        const mins = Math.ceil((total / 80)); // سرعت متوسط پیاده‌روی در اماکن شلوغ
+        routeSummaryEl.innerHTML = `<strong>مسیر داخلی:</strong> ${Math.round(total)} متر — زمان تقریبی: ${mins} دقیقه`;
+        let stepsHtml = res.path.map(id => placeById[id].name).join(' ← ');
+        routeStepsEl.innerHTML = `<div class="meta" style="line-height: 1.8;"><strong>مسیر:</strong> ${stepsHtml}</div>`;
+      } else {
+         routeSummaryEl.textContent = 'مسیری بین این دو نقطه یافت نشد.';
+      }
 
     }catch(err){
+      console.error("Routing error:", err);
       if(err && err.code === 'PERMISSION_DENIED') routeSummaryEl.textContent = 'دسترسی به مکان رد شد — مبدا را دستی انتخاب کنید.';
       else routeSummaryEl.textContent = 'خطا در محاسبهٔ مسیر.';
     }
