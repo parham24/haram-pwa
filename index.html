@@ -1,22 +1,324 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>نقشه حرم مطهر رضوی</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- خط جدید: افزودن استایل پلاگین مسیریابی -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-    <link rel="stylesheet" href="style.css">
-    <meta name="theme-color" content="#00695c"/>
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>راهنمای حرفه‌ای و کامل حرم امام رضا — نسخهٔ نهایی</title>
+  <meta name="description" content="نسخهٔ حرفه‌ای راهنمای حرم امام رضا — جستجو، مسیریابی از موقعیت شما، جزئیات مکان‌ها، فیلتر و نمایش مسیر داخلی" />
+
+  <!-- Leaflet & plugins -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+  <style>
+    :root{--accent:#0b6;--muted:#6b7280;--bg:#f6f7fb;--card:#fff}
+    html,body{height:100%;margin:0;font-family: 'Vazirmatn', Tahoma, sans-serif;background:var(--bg);color:#0f172a}
+    header{background:linear-gradient(90deg,#075a4a,#0b6);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:12px}
+    .title{font-weight:800;font-size:18px}
+    .subtitle{font-size:13px;opacity:0.9}
+
+    .controls{display:flex;gap:8px;align-items:center;margin-left:auto}
+    input,select,button{padding:8px;border-radius:10px;border:1px solid #e6e9ee;background:var(--card)}
+    button.primary{background:var(--accent);color:#fff;border:0;padding:9px 12px;cursor:pointer}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.15);color:#fff}
+
+    .container{max-width:1200px;margin:16px auto;padding:0 12px;display:grid;grid-template-columns:1fr 360px;gap:12px}
+    #map{height:75vh;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.08)}
+    .panel{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(2,6,23,0.06)}
+
+    .places{height:75vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
+    .place{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;border:1px solid #f0f2f7}
+    .place img{width:64px;height:64px;border-radius:8px;object-fit:cover;background:#f3f4f6}
+    .place h4{margin:0;font-size:15px}
+    .meta{font-size:13px;color:var(--muted)}
+
+    .route-summary{margin-top:8px;padding:10px;border-radius:10px;background:linear-gradient(90deg,rgba(11,102,95,0.04),rgba(11,102,95,0.02));border:1px solid #eef9f6}
+
+    /* gallery modal */
+    .gallery-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:4000}
+    .gallery-modal.open{display:flex}
+    .gallery-card{background:#fff;border-radius:10px;padding:12px;max-width:900px;width:92%;}
+    .gallery-card img{width:100%;height:420px;object-fit:cover;border-radius:8px}
+
+    @media(max-width:980px){ .container{grid-template-columns:1fr;}.places{height:36vh}#map{height:56vh} }
+  </style>
 </head>
 <body>
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- خط جدید: افزودن اسکریپت پلاگین مسیریابی -->
-    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-    <script src="script.js"></script>
+
+  <header>
+    <div>
+      <div class="title">راهنمای حرفه‌ای حرم امام رضا</div>
+      <div class="subtitle">پیدا کن → نگاه کن → برو — مسیریابی از موقعیت شما با ریزجزییات</div>
+    </div>
+
+    <div class="controls" role="region" aria-label="کنترل‌های نقشه">
+      <input id="search" placeholder="جستجوی صحن، رواق، باب..." aria-label="جستجو" />
+      <select id="start" aria-label="مبدا"></select>
+      <select id="end" aria-label="مقصد"></select>
+      <button id="routeBtn" class="primary">مسیریابی</button>
+      <button id="locateBtn" class="ghost">موقعیت من</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div>
+      <div id="map"></div>
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div class="panel" style="flex:1">
+          <strong>خلاصهٔ مسیر</strong>
+          <div id="routeSummary" class="route-summary">هیچ مسیری محاسبه نشده است.</div>
+          <div id="routeSteps" style="margin-top:10px;font-size:13px;color:var(--muted)"></div>
+        </div>
+        <div class="panel" style="width:220px">
+          <strong>فیلترها</strong>
+          <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
+            <label><input type="checkbox" class="filter" data-type="صحن" checked> صحن‌ها</label>
+            <label><input type="checkbox" class="filter" data-type="رواق" checked> رواق‌ها</label>
+            <label><input type="checkbox" class="filter" data-type="باب" checked> باب‌ها</label>
+            <label><input type="checkbox" class="filter" data-type="مکان" checked> موزه و خدمات</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="panel places" id="placesPanel" aria-live="polite"></aside>
+  </main>
+
+  <!-- Modal for location help -->
+  <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(2,6,23,0.45);align-items:center;justify-content:center;z-index:3000">
+    <div style="background:#fff;padding:18px;border-radius:12px;max-width:420px;margin:16px">
+      <h3>راهنمای فعال‌سازی مکان</h3>
+      <p style="color:var(--muted)">برای استفاده از «موقعیت من» مرورگر باید دسترسی موقعیت را بدهد. اگر Deny زده‌اید به تنظیمات سایت بروید و Location را Allow کنید. صفحه باید روی HTTPS یا localhost اجرا شود.</p>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button id="modalClose">بستن</button></div>
+    </div>
+  </div>
+
+  <!-- Gallery modal for images -->
+  <div id="gallery" class="gallery-modal"><div class="gallery-card"><img id="galleryImg" src="" alt="تصویر مکان"/><div style="display:flex;justify-content:flex-end;margin-top:8px"><button id="closeGallery">بستن</button></div></div></div>
+
+  <!-- scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+  <script>
+    // --- Data: expanded set of places (with sample images) ---
+    const places = [
+      {id:'golden_dome', name:'ضریح / گنبد طلا', type:'صحن', lat:36.28805, lon:59.61570, img:'https://picsum.photos/id/1011/800/500', desc:'مرکز آرامگاه امام رضا (ع) — مهم‌ترین نقطه زیارتی.'},
+      {id:'goharshad', name:'مسجد گوهرشاد', type:'رواق', lat:36.28790, lon:59.61510, img:'https://picsum.photos/id/1012/800/500', desc:'مسجد تاریخی و معروف گوهرشاد.'},
+      {id:'sahn_enqelab', name:'صحن انقلاب (عتیق)', type:'صحن', lat:36.28800, lon:59.61540, img:'https://picsum.photos/id/1013/800/500', desc:'صحن قدیمی و نزدیک ضریح.'},
+      {id:'sahn_azadi', name:'صحن آزادی', type:'صحن', lat:36.28860, lon:59.61620, img:'https://picsum.photos/id/1014/800/500', desc:'صحن بزرگ شرقی با دسترسی‌های متعدد.'},
+      {id:'sahn_jamee', name:'صحن جامع رضوی', type:'صحن', lat:36.28910, lon:59.61500, img:'https://picsum.photos/id/1015/800/500', desc:'بزرگ‌ترین صحن جدید.'},
+      {id:'sahn_jomhuri', name:'صحن جمهوری اسلامی', type:'صحن', lat:36.28780, lon:59.61650, img:'https://picsum.photos/id/1016/800/500', desc:'صحن ضلع غربی با خدمات و ورودی‌ها.'},
+      {id:'sahn_qods', name:'صحن قدس', type:'صحن', lat:36.28750, lon:59.61520, img:'https://picsum.photos/id/1017/800/500', desc:'صحن کوچک و باقدمت.'},
+      {id:'sahn_ghadir', name:'صحن غدیر', type:'صحن', lat:36.28830, lon:59.61440, img:'https://picsum.photos/id/1018/800/500', desc:'متصل به بازار غدیر.'},
+      {id:'sahn_kowsar', name:'صحن کوثر', type:'صحن', lat:36.28940, lon:59.61590, img:'https://picsum.photos/id/1019/800/500', desc:'صحن شمال شرقی با راهروهای متعدد.'},
+      {id:'ravaq_sheikh_bahaei', name:'رواق شیخ بهایی', type:'رواق', lat:36.28820, lon:59.61600, img:'https://picsum.photos/id/1020/800/500', desc:'رواق مشهور شیخ بهایی.'},
+      {id:'ravaq_dar_al_hujjah', name:'رواق دارالحجه', type:'رواق', lat:36.28785, lon:59.61610, img:'https://picsum.photos/id/1021/800/500', desc:'رواق بزرگ و پرتردد.'},
+      {id:'ivaan_abasi', name:'ایوان عباسی', type:'ایوان', lat:36.28815, lon:59.61595, img:'https://picsum.photos/id/1022/800/500', desc:'ایوانی تاریخی و زیبا.'},
+      {id:'bab_ol_reza', name:'باب‌الرضا (ورودی)', type:'باب', lat:36.28905, lon:59.61560, img:'https://picsum.photos/id/1023/800/500', desc:'یکی از ورودی‌های اصلی حرم.'},
+      {id:'museum', name:'موزه آستان قدس', type:'مکان', lat:36.28790, lon:59.61700, img:'https://picsum.photos/id/1024/800/500', desc:'موزهٔ اشیاء تاریخی و نفیس.'},
+      {id:'dokhtaran_gate', name:'دروازهٔ شرقی (دختران)', type:'باب', lat:36.28880, lon:59.61720, img:'https://picsum.photos/id/1025/800/500', desc:'ورودی شرق و مسیر بازار.'},
+      {id:'ravaq_touhid', name:'رواق توحید', type:'رواق', lat:36.28870, lon:59.61595, img:'https://picsum.photos/id/1026/800/500', desc:'رواقی زیبا با تزئینات.'},
+      {id:'ravaq_dar_al_salam', name:'رواق دارالسلام', type:'رواق', lat:36.28810, lon:59.61585, img:'https://picsum.photos/id/1027/800/500', desc:'رواق نزدیک به ضریح.'},
+      {id:'sabt_anam', name:'بازارها و مسیرهای تجاری', type:'مکان', lat:36.28950, lon:59.61650, img:'https://picsum.photos/id/1028/800/500', desc:'بازارها و دسترسی‌های خرید.'},
+      {id:'concourse_west', name:'محوطهٔ غربی', type:'مکان', lat:36.28760, lon:59.61600, img:'https://picsum.photos/id/1029/800/500', desc:'دسترسی به ایستگاه‌ها و سرویس‌ها.'},
+      {id:'garden', name:'فضاهای سبز', type:'مکان', lat:36.28840, lon:59.61490, img:'https://picsum.photos/id/1030/800/500', desc:'باغچه‌ها و فضای استراحت.'},
+      {id:'chapel', name:'شبستان‌های داخلی', type:'مکان', lat:36.28825, lon:59.61530, img:'https://picsum.photos/id/1031/800/500', desc:'شبستان‌ها برای نماز و استراحت.'},
+      {id:'roshd', name:'ایستگاه خدمات و اطلاع‌رسانی', type:'مکان', lat:36.28870, lon:59.61660, img:'https://picsum.photos/id/1032/800/500', desc:'مرکز اطلاع‌رسانی زایران.'},
+      {id:'azadi_gate', name:'دروازهٔ آزادی', type:'باب', lat:36.28865, lon:59.61640, img:'https://picsum.photos/id/1033/800/500', desc:'دروازهٔ بزرگ آزادی.'},
+      {id:'north_gate', name:'دروازهٔ شمالی', type:'باب', lat:36.28930, lon:59.61540, img:'https://picsum.photos/id/1034/800/500', desc:'ورودی شمالی حرم.'},
+      {id:'ambulance', name:'واحد امداد', type:'مکان', lat:36.28795, lon:59.61620, img:'https://picsum.photos/id/1035/800/500', desc:'خدمات پزشکی و فوریت‌ها.'},
+      {id:'parking', name:'پارکینگ', type:'مکان', lat:36.28740, lon:59.61460, img:'https://picsum.photos/id/1036/800/500', desc:'پارکینگ و خدمات خودرو.'},
+      {id:'library', name:'کتابخانهٔ آستان', type:'مکان', lat:36.28885, lon:59.61610, img:'https://picsum.photos/id/1037/800/500', desc:'کتابخانهٔ مجموعه.'},
+      {id:'restroom', name:'سرویس‌های بهداشتی', type:'مکان', lat:36.28810, lon:59.61650, img:'https://picsum.photos/id/1038/800/500', desc:'سرویس‌های بهداشتی اصلی.'},
+      {id:'info_center', name:'مرکز راهنمای زایران', type:'مکان', lat:36.28890, lon:59.61580, img:'https://picsum.photos/id/1039/800/500', desc:'مرکز راهنما با نقشه و اطلاعات.'}
+    ];
+
+    const edges = [
+      ['golden_dome','ravaq_dar_al_salam'], ['ravaq_dar_al_salam','sahn_enqelab'], ['sahn_enqelab','ivaan_abasi'],
+      ['ivaan_abasi','ravaq_sheikh_bahaei'], ['ravaq_sheikh_bahaei','sahn_azadi'], ['sahn_azadi','dokhtaran_gate'],
+      ['sahn_azadi','museum'], ['sahn_jomhuri','concourse_west'], ['sahn_jamee','sahn_ghadir'], ['sahn_ghadir','sabt_anam'],
+      ['sahn_kowsar','ravaq_touhid'], ['ravaq_touhid','goharshad'], ['goharshad','golden_dome'], ['dokhtaran_gate','sabt_anam'],
+      ['north_gate','sahn_jamee'], ['sahn_jomhuri','ambulance'], ['parking','concourse_west'], ['library','info_center'], ['restroom','roshd']
+    ];
+
+    // --- Map start ---
+    const map = L.map('map',{zoomControl:true}).setView([36.28805,59.6157],18);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'© OpenStreetMap'}).addTo(map);
+
+    // marker cluster
+    const cluster = L.markerClusterGroup();
+
+    // tiny svg icon generator
+    function svgIcon(color){
+      const svg = encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='40' height='52' viewBox='0 0 40 52'><path d='M20 0C12 0 5.5 6.2 5.5 13.8c0 10.7 14 28.7 13.9 28.8-.2.3-.4.6-.6.9.5.2 1.1.3 1.7.3.6 0 1.2-.1 1.7-.3-.2-.3-.4-.6-.6-.9C20.5 42.5 34.5 24.5 34.5 13.8 34.5 6.2 28 0 20 0z' fill='${color}'/><circle cx='20' cy='13.8' r='5' fill='white'/></svg>`);
+      return L.icon({iconUrl:'data:image/svg+xml;utf8,'+svg, iconSize:[28,36], iconAnchor:[14,36], popupAnchor:[0,-30]});
+    }
+
+    const icons = { 'صحن': svgIcon('#0b6'), 'رواق': svgIcon('#0a84a6'), 'باب': svgIcon('#d97706'), 'مکان': svgIcon('#6b21a8'), 'ایوان': svgIcon('#b91c1c') };
+
+    const markers = {};
+    places.forEach(p=>{
+      const ic = icons[p.type] || icons['مکان'];
+      const popupHtml = `<div style="max-width:260px"><img src='${p.img}' alt='${p.name}' style='width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:6px' /><strong>${p.name}</strong><br/><small style='color:${'#6b7280'}'>${p.type}</small><p style='margin-top:6px'>${p.desc}</p><div style='margin-top:8px'><button class='navBtn' data-id='${p.id}'>مسیریابی به اینجا</button> <button class='viewBtn' data-id='${p.id}'>نمایش</button> <button class='imgBtn' data-img='${p.img}'>بزرگ‌نمایی</button></div></div>`;
+      const m = L.marker([p.lat,p.lon],{icon:ic}).bindPopup(popupHtml);
+      m.on('popupopen',()=>{ setTimeout(()=>{ const b = document.querySelector('.navBtn[data-id="'+p.id+'"]'); if(b) b.addEventListener('click', ()=>{ document.getElementById('end').value = p.id; showRouteFromSelected(); }); const v = document.querySelector('.viewBtn[data-id="'+p.id+'"]'); if(v) v.addEventListener('click', ()=>{ map.setView([p.lat,p.lon],19); }); const im = document.querySelector('.imgBtn[data-img="'+p.img+'"]'); if(im) im.addEventListener('click', ()=>{ openGallery(p.img); }); },50); });
+      cluster.addLayer(m); markers[p.id]=m;
+    });
+    map.addLayer(cluster);
+
+    // build placeById
+    const placeById = {}; places.forEach(p=> placeById[p.id]=p);
+
+    // populate selects and list
+    const startEl = document.getElementById('start');
+    const endEl = document.getElementById('end');
+    const placesPanel = document.getElementById('placesPanel');
+
+    function populate(){
+      startEl.innerHTML='';
+      const opt = document.createElement('option'); opt.value='__me'; opt.textContent='موقعیت من'; startEl.appendChild(opt);
+      const groups = {};
+      places.forEach(p=>{ (groups[p.type] = groups[p.type]||[]).push(p); });
+      Object.keys(groups).forEach(type=>{
+        const og = document.createElement('optgroup'); og.label = type;
+        groups[type].forEach(p=>{ const o = document.createElement('option'); o.value = p.id; o.textContent = p.name; og.appendChild(o); });
+        startEl.appendChild(og);
+      });
+
+      endEl.innerHTML='';
+      places.forEach(p=>{ const o = document.createElement('option'); o.value = p.id; o.textContent = `${p.name} — ${p.type}`; endEl.appendChild(o); });
+
+      renderPlaces(new Set(['صحن','رواق','باب','مکان']), '');
+    }
+
+    function renderPlaces(filterTypes, q){
+      placesPanel.innerHTML='';
+      const s = (q||'').trim().toLowerCase();
+      places.filter(p=> filterTypes.has(p.type) && (s==='' || (p.name+' '+p.type+' '+p.desc).toLowerCase().includes(s)) ).forEach(p=>{
+        const card = document.createElement('div'); card.className='place';
+        const img = document.createElement('img'); img.src = p.img || 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80"><rect width="100%" height="100%" fill="#f3f4f6"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-size="12">${p.type}</text></svg>`);
+        const meta = document.createElement('div'); meta.style.flex='1';
+        const h = document.createElement('h4'); h.textContent = p.name;
+        const m = document.createElement('div'); m.className='meta'; m.textContent = p.type + ' · ' + p.desc;
+        const btnNav = document.createElement('button'); btnNav.textContent='مسیریابی'; btnNav.style.marginTop='6px'; btnNav.addEventListener('click', ()=>{ endEl.value = p.id; showRouteFromSelected(); });
+        const btnView = document.createElement('button'); btnView.textContent='نمایش'; btnView.style.marginTop='6px'; btnView.style.marginLeft='8px'; btnView.addEventListener('click', ()=>{ map.setView([p.lat,p.lon],19); markers[p.id].openPopup(); });
+        const btnImg = document.createElement('button'); btnImg.textContent='عکس'; btnImg.style.marginTop='6px'; btnImg.style.marginLeft='8px'; btnImg.addEventListener('click', ()=> openGallery(p.img));
+        meta.appendChild(h); meta.appendChild(m); meta.appendChild(btnNav); meta.appendChild(btnView); meta.appendChild(btnImg);
+        card.appendChild(img); card.appendChild(meta);
+        placesPanel.appendChild(card);
+      });
+    }
+
+    populate();
+
+    // filters
+    const activeFilters = new Set(['صحن','رواق','باب','مکان']);
+    document.querySelectorAll('.filter').forEach(ch=> ch.addEventListener('change', e=>{
+      const t = e.target.dataset.type; if(e.target.checked) activeFilters.add(t); else activeFilters.delete(t); renderPlaces(activeFilters, document.getElementById('search').value); toggleMarkers();
+    }));
+
+    // search
+    document.getElementById('search').addEventListener('input', e=>{ renderPlaces(activeFilters, e.target.value); });
+
+    function toggleMarkers(){ cluster.clearLayers(); places.forEach(p=>{ if(activeFilters.has(p.type)) cluster.addLayer(markers[p.id]); }); }
+
+    // --- Geolocation and routing ---
+    let userMarker = null; let lastPos = null; let routingControl = null;
+
+    function showModal(){ document.getElementById('modal').style.display='flex'; }
+    function hideModal(){ document.getElementById('modal').style.display='none'; }
+    document.getElementById('modalClose').addEventListener('click', hideModal);
+
+    async function locateUser(showHelpOnDenied=true){
+      if(!navigator.geolocation) { alert('مرورگر شما از مکان‌یابی پشتیبانی نمی‌کند'); return null; }
+      return new Promise((res, rej)=>{
+        navigator.geolocation.getCurrentPosition(pos=>{
+          lastPos = {lat: pos.coords.latitude, lon: pos.coords.longitude};
+          if(userMarker) map.removeLayer(userMarker);
+          userMarker = L.marker([lastPos.lat,lastPos.lon], {icon: svgIcon('#0a84a6')}).addTo(map).bindPopup('موقعیت شما').openPopup();
+          map.setView([lastPos.lat,lastPos.lon], 18);
+          res(lastPos);
+        }, err=>{
+          if(err.code === err.PERMISSION_DENIED){ if(showHelpOnDenied) showModal(); rej({code:'PERMISSION_DENIED'}); }
+          else if(err.code === err.POSITION_UNAVAILABLE) { alert('موقعیت در دسترس نیست. GPS را بررسی کنید.'); rej({code:'POSITION_UNAVAILABLE'}); }
+          else if(err.code === err.TIMEOUT) { alert('درخواست موقعیت زمان‌بر بود. دوباره تلاش کنید.'); rej({code:'TIMEOUT'}); }
+          else { rej({code:'UNKNOWN'}); }
+        }, {enableHighAccuracy:true, timeout:15000, maximumAge:0});
+      });
+    }
+
+    function clearRouting(){ if(routingControl){ map.removeControl(routingControl); routingControl = null; } }
+
+    function haversine(a,b){ const toRad = v=>v*Math.PI/180; const R=6371e3; const dLat=toRad(b[0]-a[0]); const dLon=toRad(b[1]-a[1]); const lat1=toRad(a[0]); const lat2=toRad(b[0]); const s1=Math.sin(dLat/2), s2=Math.sin(dLon/2); const c=2*Math.atan2(Math.sqrt(s1*s1 + Math.cos(lat1)*Math.cos(lat2)*s2*s2), Math.sqrt(1-(s1*s1 + Math.cos(lat1)*Math.cos(lat2)*s2*s2))); return R*c; }
+
+    function nearestNodeToCoord(coord){ let best=null, bd=Infinity; places.forEach(p=>{ const d = haversine([coord.lat,coord.lon],[p.lat,p.lon]); if(d<bd){ bd=d; best=p.id; } }); return best; }
+
+    function bfsPath(a,b){ const adj={}; places.forEach(p=>adj[p.id]=[]); edges.forEach(e=>{ if(adj[e[0]] && adj[e[1]]){ adj[e[0]].push(e[1]); adj[e[1]].push(e[0]); } }); const q=[a]; const prev={}; prev[a]=null; while(q.length){ const u=q.shift(); if(u===b) break; adj[u].forEach(v=>{ if(!(v in prev)){ prev[v]=u; q.push(v); } }); } if(!(b in prev)) return null; const path=[]; let cur=b; while(cur){ path.unshift(cur); cur=prev[cur]; } return path; }
+
+    function openGallery(url){ if(!url) return; document.getElementById('galleryImg').src = url; document.getElementById('gallery').classList.add('open'); }
+    document.getElementById('closeGallery').addEventListener('click', ()=> document.getElementById('gallery').classList.remove('open'));
+
+    async function showRoute(startIdOrMe, endId){
+      clearRouting(); document.getElementById('routeSummary').textContent = 'در حال محاسبه...'; document.getElementById('routeSteps').innerHTML='';
+      try{
+        let startCoords;
+        if(startIdOrMe === '__me'){
+          const got = await locateUser(); startCoords = [got.lat, got.lon];
+        } else { const s = placeById[startIdOrMe]; startCoords = [s.lat, s.lon]; }
+        const e = placeById[endId]; const endCoords = [e.lat, e.lon];
+
+        // Try OSRM via L.Routing
+        try{
+          routingControl = L.Routing.control({ waypoints: [L.latLng(startCoords[0],startCoords[1]), L.latLng(endCoords[0],endCoords[1])], lineOptions:{styles:[{color:'#0b6',opacity:0.95,weight:5}]}, addWaypoints:false, routeWhileDragging:false, fitSelectedRoute:true, createMarker:(i,wp)=> L.marker(wp.latLng,{icon: svgIcon(i===0?'#0a84a6':'#0b6')}) }).addTo(map);
+          routingControl.on('routesfound', e=>{
+            const route = e.routes[0]; const meters=Math.round(route.summary.totalDistance); const mins=Math.round(route.summary.totalTime/60);
+            document.getElementById('routeSummary').innerHTML = `<strong>فاصله:</strong> ${meters} متر — <strong>زمان تقریبی پیاده‌روی:</strong> ${mins} دقیقه`;
+            // show steps if available
+            try{
+              const instructions = route.instructions || route.legs?.flatMap(l=>l.steps?.map(s=>s?.instruction).filter(Boolean)) || null;
+              if(instructions && instructions.length){ document.getElementById('routeSteps').innerHTML = '<strong>مراحل کوتاه:</strong><ol>'+instructions.slice(0,10).map(i=>`<li>${i}</li>`).join('')+'</ol>'; }
+            }catch(e){}
+          });
+          routingControl.on('routingerror', ()=>{ throw new Error('osrm'); });
+        } catch(osrmErr){
+          // fallback to internal graph
+          const startNode = (startIdOrMe==='__me')? nearestNodeToCoord({lat:startCoords[0], lon:startCoords[1]}) : startIdOrMe;
+          const path = bfsPath(startNode, endId);
+          if(path){ const latlngs = []; if(startIdOrMe==='__me') latlngs.push(startCoords); path.forEach(id=> latlngs.push([placeById[id].lat, placeById[id].lon])); const poly = L.polyline(latlngs,{color:'#0b6',weight:5,opacity:0.9}).addTo(map); map.fitBounds(poly.getBounds(),{padding:[40,40]}); const dist = latlngs.reduce((acc,cur,i,arr)=> i===0?0:acc + haversine(arr[i-1],cur),0); const mins=Math.round((dist/1.4)/60); document.getElementById('routeSummary').innerHTML = `<strong>فاصله تقریبـی:</strong> ${Math.round(dist)} متر — <strong>زمان تقریبی:</strong> ${mins} دقیقه (مسیر داخلی)`; document.getElementById('routeSteps').innerHTML = '<small class="meta">مسیر داخلی پیشنهادی بر اساس نگاشت نقاط.</small>'; }
+          else { const line = L.polyline([startCoords,endCoords],{color:'#0b6',weight:4,dashArray:'8 6'}).addTo(map); const d=Math.round(haversine(startCoords,endCoords)); const mins=Math.round((d/1.4)/60); document.getElementById('routeSummary').innerHTML = `<strong>مسیر مستقیم:</strong> ${d} متر — ${mins} دقیقه`; map.fitBounds(line.getBounds(),{padding:[40,40]}); }
+        }
+
+        localStorage.setItem('hr.last', JSON.stringify({start:startIdOrMe,end:endId}));
+      } catch(err){ if(err && err.code==='PERMISSION_DENIED'){ document.getElementById('routeSummary').textContent='دسترسی به مکان رد شد—لطفاً مبدا را دستی انتخاب کنید.';} else document.getElementById('routeSummary').textContent='خطا در محاسبه مسیر.'; }
+    }
+
+    function showRouteFromSelected(){ const s = startEl.value; const e = endEl.value; if(!e){ alert('مقصد را انتخاب کنید'); return; } showRoute(s,e); }
+
+    document.getElementById('routeBtn').addEventListener('click', showRouteFromSelected);
+    document.getElementById('locateBtn').addEventListener('click', ()=>{ locateUser().catch(()=>{}); });
+
+    // keyboard shortcut L to locate
+    document.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='l') locateUser().catch(()=>{}); });
+
+    // attach popup button handlers
+    document.addEventListener('click', e=>{
+      if(e.target.matches('.navBtn')){ const id=e.target.dataset.id; endEl.value=id; showRouteFromSelected(); }
+      if(e.target.matches('.viewBtn')){ const id=e.target.dataset.id; const p=placeById[id]; if(p) map.setView([p.lat,p.lon],19); }
+      if(e.target.matches('.imgBtn')){ const img=e.target.dataset.img; if(img) openGallery(img); }
+    });
+
+    function openGallery(url){ if(!url) return; document.getElementById('galleryImg').src = url; document.getElementById('gallery').classList.add('open'); }
+    document.getElementById('closeGallery').addEventListener('click', ()=> document.getElementById('gallery').classList.remove('open'));
+
+    // init UI
+    function initUI(){ populate(); try{ const last = JSON.parse(localStorage.getItem('hr.last')||'{}'); if(last.start) startEl.value=last.start; if(last.end) endEl.value=last.end; }catch(e){} }
+    initUI();
+
+    // helper: show modal if permission denied initially
+    (async function tryWarmPermission(){ try{ await locateUser(false); }catch(e){} })();
+  </script>
 </body>
 </html>
